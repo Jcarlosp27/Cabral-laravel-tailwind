@@ -164,7 +164,7 @@
             <div class="max-w-md p-4 bg-white rounded-lg shadow-lg">
                 <div class="flex justify-center -mt-16 md:justify-end">
                     <img class="object-cover w-20 h-20 border-2 border-green-500 rounded-full"
-                        src="https://cdn.pixabay.com/photo/2018/01/04/21/15/young-3061652__340.jpg">
+                    src="https://mail-attachment.googleusercontent.com/attachment/u/0/?ui=2&ik=b95ccbc7e1&attid=0.1&permmsgid=msg-f:1751319648209814727&th=184deff0efb544c7&view=att&disp=safe&saddbat=ANGjdJ-076wi0lRdPr-ByTq97pMsPCkKqI_ZyAWAYN5mSKgc6JUAk2Vk2A3FiKTqQ2yVblJifBsBD3K-WfYAE27_qFAy0DZhj5YAc5Xx5BjZ-8cikMjLWWfc7j7QCc7LBzk4sjh29SIzQOJKrADrz6e-JqMCxt23lYFJeUiOskuce9YqB0aR3fdBxkZx0H4BTcjao0WL5zjARt7-Fvg5jJsFlowAr1aK-BYpkNk3BefFnTNX-8ZnCGRBp53jkX_nsOi1MVegZ5LjETre_umO-rAhlS6kaNU144u2KARq_UDXVyjYCZgsb4cKiWHnwelTB0RptV_YKI2lO_7Uj1_54KoTstXvp8O-7lWFdYLSr1tBVKyqg7YH5VzUD0QzD1etajG5YMPKOPksfj-c077akX9XoaiDLhU2ifePKsei914CHuyko_0Bb9yv2TUX63iewX1E9o-NIgybZMUQKiVkPWOX5mtYB66XFdwPPpCIslyaptcNA36L1BY4bwDpLRiXgzjqOuN3eMUYLQR5i5PkCMcKPScDSi_Nfw6zGRopD7aFkOTsUmeOI_o1V6_LiWY5IIZ5eBn8n-6-ItmfRzQ-AWOCDoIDIj-7gUFBjGsi8xaHZ6lOl3Wul_arDUy-t-DuxqKF82ujfU7B2Wcca9V3UxlJ0s-Sxc_GnKJUGJ0H7I4w9_jxKecl0qvRhJJwG7ROvzDti1gCXUdkQIG3T9nM2n7NB-M5YWnxPp90meUMpAiEbgYFr4j90WGPcu1FzKU1NuGXr-gUP-nyWDtbWS_D8MBJXdzHTTKHd-nT-1Y77F-ukfNMVONVUh9DQnZ5XkQw822vRKvLf52frdNQJT6LSwtfPsHW8AlW0TJZra3GKMZHRIw92Wfek7JziRuy0aLU7q27IiBxGSrpOiReMwAAwmKT0FCa3_O44nQfRxTOxbuIiLAHicfjGRH4134ivCA">
                 </div>
                 <div>
                     <h2 class="text-3xl font-semibold text-gray-800">ESTUDIANTE UCSD</h2>
