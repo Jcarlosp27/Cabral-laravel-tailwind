@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Enums\TableStatus;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderStoreRequest;
+use App\Models\Invoice;
+use App\Models\InvoiceOrder;
+use App\Models\OrderMenu;
 use App\Models\Table;
 use Carbon\Carbon;
 
@@ -20,7 +24,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::all();
+        $orders = Order::where('status',OrderStatus::Active)->get();
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -31,7 +35,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $tables = Table::where('status', TableStatus::Avalaiable)->get();
+        $tables = Table::where('status', TableStatus::Unavaliable)->get();
         return view('admin.orders.create', compact('tables'));
     }
 
@@ -43,20 +47,36 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request)
     {
-        //$table = Table::findOrFail($request->table_id);
-            $order = new Order();
+            $table = Table::where('id', $request->table_id)->first();
+            //validar por status de orden
+            $orderT = Order::where('table_id', $request->table_id)->where('status',OrderStatus::Active)->get();
+            $count = count($orderT);
+
+            $position = (string)$request->customer_name;
+            $position = 'Position '.$position;
+
+            $order = Order::where('customer_name',$position)->where('status',OrderStatus::Active)->first();
+
+            if($request->customer_name <= $table->guest_number && empty($order)){
+                if($count  < $table->guest_number){
+                    $order = new Order();
+                    $order->table_id =  $request->table_id;
+                    $order->order_date =  Carbon::now();
+                    $order->status =  $request->status;
+                    $order->customer_name =  $position;
+                    $order->save();
+
+                    return redirect()->route('admin.orders.index')->with('success', 'Order created successfully');
+                }else{
+                    return redirect()->route('admin.orders.index')->with('danger','Orders exceed the numbers of guests');
+                }
+            }else {
+                return redirect()->route('admin.orders.create')->with('danger', 'does not exist this position or has already registered');
+            }
 
 
-            $order->table_id =  $request->table_id;
-            $order->order_date =  Carbon::now();
-            $order->status =  $request->status;
-            $order->customer_name =  $request->customer_name;
-            $order->save();
 
 
-
-
-        return redirect()->route('admin.orders.index')->with('success', 'Order created successfully');
     }
 
     /**
@@ -65,9 +85,35 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        //
+                $order_menu = OrderMenu::all();
+        return view('admin.orders.show', compact('order_menu'));
+
+        // $order_menu = OrderMenu::where('order_id', $order->id)->get();
+        // $invoice = new Invoice();
+        // $invoice->order_id = $order->id;
+        // $invoice->position = $order->customer_name;
+        // $invoice->invoice_date = Carbon::now();
+        // $invoice->registered_by = auth()->user()->name;
+        // $invoice->save();
+
+        // if ($order_menu && count($order_menu)) {
+        //     foreach ($order_menu as $index ) {
+        //         $invoice_detail = new InvoiceOrder();
+        //         $invoice_detail->invoice_id = $invoice->id;
+        //         $invoice_detail->menu_id = $index->menu_id;
+        //         $invoice_detail->quantity = $index->quantity;
+        //         $invoice_detail->price = $index->price;
+        //         $invoice_detail->total = $index->price * $index->quantity;
+        //         $invoice_detail->save();
+        //     }
+        // }
+
+        // $order->status = OrderStatus::Disable;
+        // $order->save();
+
+        // return redirect()->route('admin.orders.index')->with('success', 'factura generada correctamente');
     }
 
     /**
@@ -80,6 +126,39 @@ class OrderController extends Controller
     {
         $tables = Table::where('status', TableStatus::Avalaiable)->get();
         return view('admin.orders.edit', compact('order','tables'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function invoice(Order $order)
+    {
+        $order_menu = OrderMenu::where('order_id', $order->id)->get();
+        $invoice = new Invoice();
+        $invoice->order_id = $order->id;
+        $invoice->position = $order->customer_name;
+        $invoice->invoice_date = Carbon::now();
+        $invoice->registered_by = auth()->user()->name;
+        $invoice->save();
+
+        if ($order_menu && count($order_menu)) {
+            foreach ($order_menu as $index ) {
+                $invoice_detail = new InvoiceOrder();
+                $invoice_detail->invoice_id = $invoice->id;
+                $invoice_detail->menu_id = $index->menu_id;
+                $invoice_detail->quantity = $index->quantity;
+                $invoice_detail->price = $index->price;
+                $invoice_detail->total = $index->price * $index->quantity;
+                $invoice_detail->save();
+            }
+        }
+
+        $order->status = OrderStatus::Disable;
+
+        return redirect()->route('admin.orders.index')->with('success', 'factura generada correctamente');
     }
 
     /**
@@ -104,9 +183,13 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //$order->reservations()->delete();
+
+        //TODO: fix delete constraint order menu
+        //$order->order_menu()->detach();
         $order->delete();
 
         return to_route('admin.orders.index')->with('danger', 'Order deleted successfully');
     }
+
+
 }
